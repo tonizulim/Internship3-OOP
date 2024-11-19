@@ -2,9 +2,6 @@
 using Project_manager_app.Enum;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project_manager
 {
@@ -16,6 +13,16 @@ namespace Project_manager
             {
             {
                 new Project("projekt1", "opis1", new DateTime(2023, 10, 1), new DateTime(2023, 12, 1), Status.active),
+                new List<ProjectTask>()
+
+            },
+            {
+                new Project("projekt2", "opis2", new DateTime(2023, 10, 1), new DateTime(2023, 12, 1), Status.finish),
+                new List<ProjectTask>()
+
+            },
+            {
+                new Project("projekt3", "opis2", new DateTime(2023, 10, 1), new DateTime(2023, 12, 1), Status.pending),
                 new List<ProjectTask>()
 
             }
@@ -93,13 +100,13 @@ namespace Project_manager
                         AddNewProject(projectDictionary);
                         break;
                     case 3:
-                        Console.WriteLine("aaa");
+                        DeleteProject(projectDictionary);
                         break;
                     case 4:
                         Console.WriteLine("aaa");
                         break;
                     case 5:
-                        Console.WriteLine("aaa");
+                        PrintProjectFilterStatus(projectDictionary);
                         break;
                     case 6:
                         Console.WriteLine("aaa");
@@ -181,6 +188,124 @@ namespace Project_manager
                 }
             }
             return false;
+        }
+
+        static void DeleteProject(Dictionary<Project, List<ProjectTask>> projectDictionary)
+        {
+            Console.Clear();
+            Console.WriteLine("Brisanje projekta\n");
+
+            Project deleteKey = FindProject(projectDictionary);
+
+            if (deleteKey == null)
+            {
+                return;
+            }
+
+            Console.Write($"Jeste li sigurni da zelite izbrisati projekt {deleteKey.Name} (y/n)? ");
+            if (YNanswer())
+            {
+
+                projectDictionary.Remove(deleteKey);
+
+                Console.WriteLine($"\nUspjesno izbrisan.");
+            }
+            else
+            {
+                Console.WriteLine("\nPoništeno!");
+            }
+
+            Console.WriteLine("\nStisni enter za nastavak...");
+            Console.ReadLine();
+
+        }
+
+        static Project FindProject(Dictionary<Project, List<ProjectTask>> projectDictionary)
+        {
+            PrintProjectFilter(projectDictionary, "none");
+
+            Console.Write("\nUnesi ime projekta: ");
+            var projectName = Console.ReadLine().ToLower();
+
+            while (String.IsNullOrEmpty(projectName))
+            {
+                Console.Write("Neispravan unos: ");
+                projectName = Console.ReadLine().ToLower();
+            }
+
+            if (!FindProjectName(projectDictionary, projectName))
+            {
+                Console.WriteLine($"Ne postoji projekt sa imenom: {projectName}");
+
+                Console.WriteLine("\nStisni enter za nastavak...");
+                Console.ReadLine();
+
+                return null;
+            }
+
+            foreach (var element in projectDictionary)
+            {
+                if (element.Key.Name == projectName)
+                {
+                    return element.Key;
+                }
+            }
+            return null;
+        }
+
+        static void PrintProjectFilterStatus(Dictionary<Project, List<ProjectTask>> projectDictionary)
+        {
+            Console.Clear();
+            Console.WriteLine("Prikaz  projekata filtriranih po statusu: ");
+            Console.WriteLine("1 - aktivan\n2 - na cekanju\n3 - zavrsen");
+            
+            var userInput = NumInput(1, 3);
+            Console.WriteLine();
+
+
+            switch (userInput)
+            {
+                case 1:
+                    PrintProjectFilter(projectDictionary, "active");
+                    break;
+                case 2:
+                    PrintProjectFilter(projectDictionary, "pending");
+                    break;
+                case 3:
+                    PrintProjectFilter(projectDictionary, "finish");
+                    break;
+                default:
+                    break;
+            }
+
+            Console.WriteLine("\nStisni enter za nastavak...");
+            Console.ReadLine();
+        }
+
+        static void PrintProjectFilter(Dictionary<Project, List<ProjectTask>> projectDictionary, string filter)
+        {
+            Console.WriteLine("naziv projekta - opis - pocetak - kraj - status");
+
+            if (filter == "none")
+            {
+                foreach (var element in projectDictionary)
+                {
+                    element.Key.Print();
+                }
+
+                return;
+            }
+            foreach (var element in projectDictionary)
+            {
+                if (element.Key.Status.ToString() != filter)
+                {
+                    continue;
+                }
+
+                element.Key.Print();
+            }
+
+            return;
         }
     }
 }
