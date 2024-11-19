@@ -79,6 +79,19 @@ namespace Project_manager
             MainMenu(projectDictionary);
 
         }
+
+        static bool IsProjectFinished(Project TargetProject)
+        {
+            if (TargetProject.Status != Status.finish)
+            {
+                return false;
+
+            }
+            Console.WriteLine("Projekt je oznacen kao 'finish' promjene na njemu nisu moguce.");
+            Console.WriteLine("\nStisni enter za nastavak...");
+            Console.ReadLine();
+            return true;
+        }
         static bool YNanswer()
         {
             var userInput = Console.ReadLine().ToLower();
@@ -437,12 +450,34 @@ namespace Project_manager
                         ChangeProjectStatus(targetProject);
                         break;
                     case 4:
+                        if (IsProjectFinished(targetProject))
+                        {
+                            break;
+                        }
+
                         AddNewTask(projectDictionary[targetProject], targetProject);
+
+                        if (IsAllTaskFinish(projectDictionary, targetProject))
+                        {
+                            targetProject.Status = Status.finish;
+                        }
+
                         break;
                     case 5:
+                        if (IsProjectFinished(targetProject))
+                        {
+                            break;
+                        }
+
+                        DeleteTask(projectDictionary[targetProject], targetProject);
+
+                        if (IsAllTaskFinish(projectDictionary, targetProject))
+                        {
+                            targetProject.Status = Status.finish;
+                        }
                         break;
                     case 6:
-                        AproxTimeToFinishProject(projectDictionary[targetProject], targetProject.Name);
+                        AproxTimeToFinishProject(projectDictionary[targetProject], targetProject.Name, targetProject.Status);
                         break;
                     default:
                         break;
@@ -654,9 +689,80 @@ namespace Project_manager
             return false;
         }
 
-        static void AproxTimeToFinishProject(List<ProjectTask> TaskList, string name)
+        static void DeleteTask(List<ProjectTask> taskList, Project targetProject)
         {
             Console.Clear();
+            Console.WriteLine($"Brisanje zadatka iz projekta {targetProject.Name}\n");
+
+            ProjectTask deleteTask = FindTask(taskList);
+
+            if (deleteTask == null)
+            {
+                return;
+            }
+
+            Console.Write($"Jeste li sigurni da zelite izbrisati zadatak {deleteTask.Name} (y/n)? ");
+            if (YNanswer())
+            {
+
+                taskList.Remove(deleteTask);
+
+                Console.WriteLine($"\nUspjesno izbrisan.");
+            }
+            else
+            {
+                Console.WriteLine("\nPoništeno!");
+            }
+
+            Console.WriteLine("\nStisni enter za nastavak...");
+            Console.ReadLine();
+
+        }
+
+        static ProjectTask FindTask(List<ProjectTask> taskList)
+        {
+            PrintTask(taskList);
+
+            Console.Write("\nUnesi ime zadatka: ");
+            var taskName = Console.ReadLine().ToLower();
+
+            while (String.IsNullOrEmpty(taskName))
+            {
+                Console.Write("Neispravan unos: ");
+                taskName = Console.ReadLine().ToLower();
+            }
+
+            if (!FindTaskName(taskList, taskName))
+            {
+                Console.WriteLine($"Ne postoji zadatak sa imenom: {taskName}");
+
+                Console.WriteLine("\nStisni enter za nastavak...");
+                Console.ReadLine();
+
+                return null;
+            }
+
+            foreach (var element in taskList)
+            {
+                if (element.Name == taskName)
+                {
+                    return element;
+                }
+            }
+            return null;
+        }
+
+        static void AproxTimeToFinishProject(List<ProjectTask> TaskList, string name, Status status)
+        {
+            Console.Clear();
+
+            if(status == Status.finish)
+            {
+                Console.WriteLine($"Projekt {name} je završen, nema aktivnih zadataka.");
+                Console.WriteLine("\nStisni enter za nastavak...");
+                Console.ReadLine();
+                return;
+            }
 
             int time = 0;
             foreach (var projectTask in TaskList)
@@ -674,6 +780,19 @@ namespace Project_manager
 
             Console.WriteLine("\nStisni enter za nastavak...");
             Console.ReadLine();
+        }
+
+        static bool IsAllTaskFinish(Dictionary<Project, List<ProjectTask>> projectDictionary, Project TargetProject)
+        {
+            foreach (var project in projectDictionary[TargetProject])
+            {
+                if (project.Status != StatusTask.finish)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
