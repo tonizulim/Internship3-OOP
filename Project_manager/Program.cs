@@ -431,6 +431,7 @@ namespace Project_manager
                         PrintAllTaskInProject(projectDictionary[targetProject], targetProject);
                         break;
                     case 2:
+                        ShowProjectDetails(targetProject);
                         break;
                     case 3:
                         ChangeProjectStatus(targetProject);
@@ -441,6 +442,7 @@ namespace Project_manager
                     case 5:
                         break;
                     case 6:
+                        AproxTimeToFinishProject(projectDictionary[targetProject], targetProject.Name);
                         break;
                     default:
                         break;
@@ -467,6 +469,16 @@ namespace Project_manager
             }
         }
 
+        static void ShowProjectDetails(Project targetProject)
+        {
+            Console.Clear();
+            Console.WriteLine($"Detalji projekta {targetProject.Name}\n");
+
+            Console.WriteLine("naziv projekta - opis - pocetak - kraj - status");
+            targetProject.Print();
+            Console.WriteLine("\nStisni enter za nastavak...");
+            Console.ReadLine();
+        }
         static void ChangeProjectStatus(Project targetProject)
         {
             Console.Clear();
@@ -640,6 +652,28 @@ namespace Project_manager
                 }
             }
             return false;
+        }
+
+        static void AproxTimeToFinishProject(List<ProjectTask> TaskList, string name)
+        {
+            Console.Clear();
+
+            int time = 0;
+            foreach (var projectTask in TaskList)
+            {
+                if (projectTask.Status != StatusTask.active)
+                {
+                    continue;
+                }
+
+                time += projectTask.Duration;
+            }
+
+            Console.WriteLine($"Ukupno očekivano vrijme potrebno za sve aktivne zadatke u projektu {name} je: {time}min");
+
+
+            Console.WriteLine("\nStisni enter za nastavak...");
+            Console.ReadLine();
         }
     }
 }
