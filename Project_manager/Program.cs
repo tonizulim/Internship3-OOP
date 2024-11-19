@@ -1,4 +1,5 @@
-﻿using Project_manager_app.Classes;
+﻿using Project_manager.Enum;
+using Project_manager_app.Classes;
 using Project_manager_app.Enum;
 using System;
 using System.Collections.Generic;
@@ -63,7 +64,7 @@ namespace Project_manager
         static int NumInput(int start, int end)
         {
             int.TryParse(Console.ReadLine(), out var userInput);
-            if (start <= end)
+            if (start >= end)
             {
                 return userInput;
             }
@@ -340,6 +341,7 @@ namespace Project_manager
                         ChangeProjectStatus(TargetProject);
                         break;
                     case 4:
+                        AddNewTask(projectDictionary[TargetProject], TargetProject);
                         break;
                     case 5:
                         break;
@@ -397,6 +399,134 @@ namespace Project_manager
 
             Console.WriteLine("\nStisni enter za nastavak...");
             Console.ReadLine();
+        }
+
+        static void AddNewTask(List<ProjectTask> taskList, Project targetProject)
+        {
+            Console.Clear();
+            Console.WriteLine($"Dodavanje novog zadataka u projekt {targetProject.Name}\n");
+            var name = TaskNameEntry(taskList);
+
+            Console.Write("Unesite opis zadatka: ");
+            var description = Console.ReadLine();
+
+            while (String.IsNullOrEmpty(description) || int.TryParse(description, out _))
+            {
+                Console.Write("Neispravan unos! Ponovite:");
+                description = Console.ReadLine();
+            }
+
+            Console.Write("Unesi rok za izvrsenje (YYYY-MM-DD): ");
+            var endDate = NewDate();
+            while (endDate < DateTime.Now)
+            {
+                Console.Write("rok za izvrsenje ne moze biti iz prošlosti! unos: (YYYY-MM-DD): ");
+                endDate = NewDate();
+            }
+            Console.WriteLine("Odaberi status zadataka");
+            var status = InputTaskStatus();
+
+            Console.WriteLine("Odaberi prioritet zadataka");
+            var priority = InputTaskPriority();
+
+            Console.Write("Unesi ocekivano vrijeme trajanja (u minutama)");
+
+            var duration = NumInput(1, 1);
+            while (duration <= 0)
+            {
+                Console.Write("ocekivano vrijeme ne moze biti manje od 0! unos:");
+                duration = NumInput(1, 1);
+            }
+
+
+            Console.Write($"jeste li sigurni da zelite dodati zadatak: {name} - {description} - {endDate.ToString("yyyy-MM-dd")} - {priority} - {duration}min - {targetProject.Name} (y/n): ");
+            if (YNanswer())
+            {
+                Console.WriteLine("\nUspjesno dodano!");
+                ProjectTask newTask = new ProjectTask(name, description, endDate, status, priority, duration, targetProject.Name);
+
+                taskList.Add(newTask);
+            }
+            else
+            {
+                Console.WriteLine("\nPoništeno!");
+            }
+            Console.WriteLine("\nStisni enter za nastavak...");
+            Console.ReadLine();
+        }
+
+        static StatusTask InputTaskStatus()
+        {
+            Console.WriteLine("1 - aktivan\n2 - odgoden\n3 - završen");
+
+            var userInput = NumInput(1, 3);
+
+            var newStatus = StatusTask.active;
+            switch (userInput)
+            {
+                case 1:
+                    newStatus = StatusTask.active;
+                    break;
+                case 2:
+                    newStatus = StatusTask.delayed;
+                    break;
+                case 3:
+                    newStatus = StatusTask.finish;
+                    break;
+                default:
+                    break;
+            }
+
+            return newStatus;
+        }
+
+        static TaskPriority InputTaskPriority()
+        {
+            Console.WriteLine($"1 - visoki\n2 - srednji\n3 - niski");
+
+            var userInput = NumInput(1, 3);
+
+            var newPriority = TaskPriority.high;
+            switch (userInput)
+            {
+                case 1:
+                    newPriority = TaskPriority.high;
+                    break;
+                case 2:
+                    newPriority = TaskPriority.medium;
+                    break;
+                case 3:
+                    newPriority = TaskPriority.low;
+                    break;
+                default:
+                    break;
+            }
+
+            return newPriority;
+        }
+        static string TaskNameEntry(List<ProjectTask> taskList)
+        {
+            Console.Write("Unesi ime zadatka: ");
+            var taskName = Console.ReadLine().ToLower();
+
+            while (String.IsNullOrEmpty(taskName) || FindTaskName(taskList, taskName) || int.TryParse(taskName, out _))
+            {
+                Console.Write("Neispravan unos ili zadatak s tim imenom vec postoji! Ponovite: ");
+                taskName = Console.ReadLine().ToLower();
+            }
+
+            return taskName;
+        }
+        static bool FindTaskName(List<ProjectTask> taskList, string taskName)
+        {
+            foreach (var project in taskList)
+            {
+                if (project.Name == taskName)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
