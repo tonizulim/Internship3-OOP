@@ -63,7 +63,7 @@ namespace Project_manager
         static int NumInput(int start, int end)
         {
             int.TryParse(Console.ReadLine(), out var userInput);
-            if (start == end)
+            if (start <= end)
             {
                 return userInput;
             }
@@ -109,7 +109,7 @@ namespace Project_manager
                         PrintProjectFilterStatus(projectDictionary);
                         break;
                     case 6:
-                        Console.WriteLine("aaa");
+                        ProjectMenu(projectDictionary);
                         break;
                     case 7:
                         Console.WriteLine("aaa");
@@ -306,6 +306,97 @@ namespace Project_manager
             }
 
             return;
+        }
+
+        static void ProjectMenu(Dictionary<Project, List<ProjectTask>> projectDictionary)
+        {
+            Console.Clear();
+            Console.WriteLine("Upravljanje pojedinim projektom\n");
+
+            Project TargetProject = FindProject(projectDictionary);
+
+            if (TargetProject == null)
+            {
+                return;
+            }
+
+            var userInput = 0;
+
+            while (userInput != 7)
+            {
+                Console.Clear();
+                Console.WriteLine($"Upravljanje projektom {TargetProject.Name}\n");
+                Console.WriteLine("1 - Ispis svih zadataka unutar odabranog projekta\n2 - Prikaz detalja odabranog projekta\n3 - Uređivanje statusa projekta\n4 - Dodavanje zadatka unutar projekta\n5 - Brisanje zadatka iz projekta\n6 - Prikaz ukupno očekivanog vremena potrebnog za sve aktivne zadatke u projektu\n7 - Izlaz");
+
+                userInput = NumInput(1, 7);
+
+                switch (userInput)
+                {
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        ChangeProjectStatus(TargetProject);
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    case 6:
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+        }
+
+        static void ChangeProjectStatus(Project TargetProject)
+        {
+            Console.Clear();
+            Console.WriteLine($"Uredivanje statusa projekt {TargetProject.Name}. Trenutni status projekta je: {TargetProject.Status}");
+
+            Console.WriteLine("1 - aktivan\n2 - na cekanju\n3 - završen");
+            var userInput = NumInput(1, 3);
+            var newStatus = Status.active;
+            switch (userInput)
+            {
+                case 1:
+                    newStatus = Status.active;
+                    break;
+                case 2:
+                    newStatus = Status.pending;
+                    break;
+                case 3:
+                    newStatus = Status.finish;
+                    break;
+                default:
+                    break;
+            }
+
+            if (newStatus == TargetProject.Status)
+            {
+                Console.WriteLine("Status ostaje isti.");
+                Console.WriteLine("\nStisni enter za nastavak...");
+                Console.ReadLine();
+
+                return;
+            }
+
+            Console.Write($"jeste li sigurni da zelite promjeniti status iz {TargetProject.Status} u {newStatus} (y/n): ");
+            if (YNanswer())
+            {
+                TargetProject.Status = newStatus;
+                Console.WriteLine("\nStatus uspjesno promjenjen!");
+            }
+            else
+            {
+                Console.WriteLine("\nPonisteno!");
+            }
+
+            Console.WriteLine("\nStisni enter za nastavak...");
+            Console.ReadLine();
         }
     }
 }
