@@ -12,22 +12,69 @@ namespace Project_manager
         {
             var projectDictionary = new Dictionary<Project, List<ProjectTask>>
             {
-            {
-                new Project("projekt1", "opis1", new DateTime(2023, 10, 1), new DateTime(2023, 12, 1), Status.active),
-                new List<ProjectTask>()
-
-            },
-            {
-                new Project("projekt2", "opis2", new DateTime(2023, 10, 1), new DateTime(2023, 12, 1), Status.finish),
-                new List<ProjectTask>()
-
-            },
-            {
-                new Project("projekt3", "opis2", new DateTime(2023, 10, 1), new DateTime(2023, 12, 1), Status.pending),
-                new List<ProjectTask>()
-
-            }
+                {
+                    new Project("project1", "Description for Project 1", new DateTime(2023, 10, 1), new DateTime(2023, 12, 1), Status.active),
+                    new List<ProjectTask>
+                    {
+                        new ProjectTask("task1", "Description for Task 1", new DateTime(2023, 10, 5), StatusTask.delayed, TaskPriority.low, 3, "project1"),
+                        new ProjectTask("task2", "Description for Task 2", new DateTime(2023, 10, 15), StatusTask.finish, TaskPriority.high, 5, "project1"),
+                        new ProjectTask("task3", "Description for Task 3", new DateTime(2024, 11, 19), StatusTask.active, TaskPriority.low, 7, "project1"),
+                        new ProjectTask("task4", "Description for Task 4", new DateTime(2024, 11, 14), StatusTask.delayed, TaskPriority.medium, 2, "project1"),
+                        new ProjectTask("task5", "Description for Task 5", new DateTime(2024, 11, 20), StatusTask.active, TaskPriority.medium, 4, "project1"),
+                        new ProjectTask("task6", "Description for Task 6", new DateTime(2023, 11, 20), StatusTask.active, TaskPriority.low, 6, "project1")
+                    }
+                },
+                {
+                    new Project("project2", "Description for Project 2", new DateTime(2023, 9, 15), new DateTime(2023, 11, 30), Status.active),
+                    new List<ProjectTask>
+                    {
+                        new ProjectTask("task0", "Description for Task 3", new DateTime(2024, 11, 19), StatusTask.active, TaskPriority.low, 7, "project2"),
+                        new ProjectTask("task1", "Description for Task 1", new DateTime(2023, 9, 20), StatusTask.finish, TaskPriority.medium, 4, "project2"),
+                        new ProjectTask("task2", "Description for Task 2", new DateTime(2023, 9, 30), StatusTask.finish, TaskPriority.high, 3, "project2"),
+                        new ProjectTask("task3", "Description for Task 3", new DateTime(2023, 10, 10), StatusTask.finish, TaskPriority.medium, 5, "project2"),
+                        new ProjectTask("task4", "Description for Task 4", new DateTime(2023, 10, 25), StatusTask.finish, TaskPriority.low, 6, "project2"),
+                        new ProjectTask("task5", "Description for Task 5", new DateTime(2023, 11, 5), StatusTask.finish, TaskPriority.high, 7, "project2"),
+                        new ProjectTask("task6", "Description for Task 6", new DateTime(2023, 11, 20), StatusTask.finish, TaskPriority.medium, 2, "project2")
+                    }
+                },
+                {
+                new Project("project3", "Description for Project 3", new DateTime(2023, 8, 1), new DateTime(2023, 10, 15), Status.pending),
+                    new List<ProjectTask>
+                    {
+                        new ProjectTask("task1", "Description for Task 1", new DateTime(2023, 8, 5), StatusTask.finish, TaskPriority.high, 3, "project3"),
+                        new ProjectTask("task2", "Description for Task 2", new DateTime(2023, 8, 15), StatusTask.finish, TaskPriority.medium, 4, "project3"),
+                        new ProjectTask("task3", "Description for Task 3", new DateTime(2023, 9, 1), StatusTask.finish, TaskPriority.low, 6, "project3"),
+                        new ProjectTask("task4", "Description for Task 4", new DateTime(2023, 9, 15), StatusTask.finish, TaskPriority.high, 5, "project3"),
+                        new ProjectTask("task5", "Description for Task 5", new DateTime(2023, 9, 25), StatusTask.finish, TaskPriority.high, 2, "project3"),
+                        new ProjectTask("task6", "Description for Task 6", new DateTime(2023, 10, 5), StatusTask.finish, TaskPriority.medium, 7, "project3")
+                    }
+                },
+                {
+                new Project("project4", "Description for Project 4", new DateTime(2023, 7, 10), new DateTime(2023, 9, 30), Status.active),
+                    new List<ProjectTask>
+                    {
+                        new ProjectTask("task 1", "Description for Task 1", new DateTime(2023, 7, 15), StatusTask.finish, TaskPriority.high, 5, "project4"),
+                        new ProjectTask("task2", "Description for Task 2", new DateTime(2023, 7, 25), StatusTask.finish, TaskPriority.medium, 4, "project4"),
+                        new ProjectTask("task3", "Description for Task 3", new DateTime(2023, 8, 10), StatusTask.finish, TaskPriority.medium, 3, "project4"),
+                        new ProjectTask("task4", "Description for Task 4", new DateTime(2023, 8, 25), StatusTask.finish, TaskPriority.low, 6, "project4"),
+                        new ProjectTask("task5", "Description for Task 5", new DateTime(2023, 9, 5), StatusTask.finish, TaskPriority.high, 7, "project4"),
+                        new ProjectTask("task6", "Description for Task 6", new DateTime(2023, 9, 20), StatusTask.finish, TaskPriority.medium, 2, "project4")
+                    }
+                },
+                {
+                new Project("project5", "Description for Project 5", new DateTime(2023, 6, 20), new DateTime(2023, 8, 31), Status.active),
+                    new List<ProjectTask>
+                    {
+                        new ProjectTask("task1", "Description for Task 1", new DateTime(2023, 6, 25), StatusTask.finish, TaskPriority.medium, 3, "project5"),
+                        new ProjectTask("task2", "Description for Task 2", new DateTime(2023, 7, 5), StatusTask.active, TaskPriority.medium, 5, "project5"),
+                        new ProjectTask("task3", "Description for Task 3", new DateTime(2023, 7, 15), StatusTask.finish, TaskPriority.low, 4, "project5"),
+                        new ProjectTask("task4", "Description for Task 4", new DateTime(2023, 7, 25), StatusTask.finish, TaskPriority.medium, 6, "project5"),
+                        new ProjectTask("task5", "Description for Task 5", new DateTime(2023, 8, 10), StatusTask.finish, TaskPriority.high, 7, "project5"),
+                        new ProjectTask("task6", "Description for Task 6", new DateTime(2023, 8, 20), StatusTask.finish, TaskPriority.low, 2, "project5")
+                    }
+                }
             };
+        
 
             MainMenu(projectDictionary);
 
@@ -314,9 +361,9 @@ namespace Project_manager
             Console.Clear();
             Console.WriteLine("Upravljanje pojedinim projektom\n");
 
-            Project TargetProject = FindProject(projectDictionary);
+            Project targetProject = FindProject(projectDictionary);
 
-            if (TargetProject == null)
+            if (targetProject == null)
             {
                 return;
             }
@@ -326,7 +373,7 @@ namespace Project_manager
             while (userInput != 7)
             {
                 Console.Clear();
-                Console.WriteLine($"Upravljanje projektom {TargetProject.Name}\n");
+                Console.WriteLine($"Upravljanje projektom {targetProject.Name}\n");
                 Console.WriteLine("1 - Ispis svih zadataka unutar odabranog projekta\n2 - Prikaz detalja odabranog projekta\n3 - Uređivanje statusa projekta\n4 - Dodavanje zadatka unutar projekta\n5 - Brisanje zadatka iz projekta\n6 - Prikaz ukupno očekivanog vremena potrebnog za sve aktivne zadatke u projektu\n7 - Izlaz");
 
                 userInput = NumInput(1, 7);
@@ -334,14 +381,15 @@ namespace Project_manager
                 switch (userInput)
                 {
                     case 1:
+                        PrintAllTaskInProject(projectDictionary[targetProject], targetProject);
                         break;
                     case 2:
                         break;
                     case 3:
-                        ChangeProjectStatus(TargetProject);
+                        ChangeProjectStatus(targetProject);
                         break;
                     case 4:
-                        AddNewTask(projectDictionary[TargetProject], TargetProject);
+                        AddNewTask(projectDictionary[targetProject], targetProject);
                         break;
                     case 5:
                         break;
@@ -353,11 +401,29 @@ namespace Project_manager
             }
 
         }
-
-        static void ChangeProjectStatus(Project TargetProject)
+        static void PrintAllTaskInProject(List<ProjectTask> taskList, Project targetProject)
         {
             Console.Clear();
-            Console.WriteLine($"Uredivanje statusa projekt {TargetProject.Name}. Trenutni status projekta je: {TargetProject.Status}");
+            Console.WriteLine($"Ispis svih zadataka unutar {targetProject.Name}\n");
+
+            PrintTask(taskList);
+
+            Console.WriteLine("\nStisni enter za nastavak...");
+            Console.ReadLine();
+        }
+        static void PrintTask(List<ProjectTask> taskList)
+        {
+            Console.WriteLine("Naziv zadatka - opis - rok za izvrsenje - status - prioritet - ocekivano vrijeme trajanja");
+            foreach (var projectTask in taskList)
+            {
+                projectTask.Print();
+            }
+        }
+
+        static void ChangeProjectStatus(Project targetProject)
+        {
+            Console.Clear();
+            Console.WriteLine($"Uredivanje statusa projekt {targetProject.Name}. Trenutni status projekta je: {targetProject.Status}");
 
             Console.WriteLine("1 - aktivan\n2 - na cekanju\n3 - završen");
             var userInput = NumInput(1, 3);
@@ -377,7 +443,7 @@ namespace Project_manager
                     break;
             }
 
-            if (newStatus == TargetProject.Status)
+            if (newStatus == targetProject.Status)
             {
                 Console.WriteLine("Status ostaje isti.");
                 Console.WriteLine("\nStisni enter za nastavak...");
@@ -386,10 +452,10 @@ namespace Project_manager
                 return;
             }
 
-            Console.Write($"jeste li sigurni da zelite promjeniti status iz {TargetProject.Status} u {newStatus} (y/n): ");
+            Console.Write($"jeste li sigurni da zelite promjeniti status iz {targetProject.Status} u {newStatus} (y/n): ");
             if (YNanswer())
             {
-                TargetProject.Status = newStatus;
+                targetProject.Status = newStatus;
                 Console.WriteLine("\nStatus uspjesno promjenjen!");
             }
             else
