@@ -14,7 +14,7 @@ namespace Project_manager
             var projectDictionary = new Dictionary<Project, List<ProjectTask>>
             {
                 {
-                    new Project("project1", "Description for Project 1", new DateTime(2023, 10, 1), new DateTime(2023, 12, 1), Status.active),
+                    new Project("project1", "Description for Project 1", new DateTime(2023, 10, 1), new DateTime(2024, 12, 1), Status.active),
                     new List<ProjectTask>
                     {
                         new ProjectTask("task1", "Description for Task 1", new DateTime(2023, 10, 5), StatusTask.delayed, TaskPriority.low, 3, "project1"),
@@ -39,7 +39,7 @@ namespace Project_manager
                     }
                 },
                 {
-                new Project("project3", "Description for Project 3", new DateTime(2023, 8, 1), new DateTime(2023, 10, 15), Status.active),
+                new Project("project3", "Description for Project 3", new DateTime(2023, 8, 1), new DateTime(2023, 10, 15), Status.finish),
                     new List<ProjectTask>
                     {
                         new ProjectTask("task1", "Description for Task 1", new DateTime(2023, 8, 5), StatusTask.finish, TaskPriority.high, 3, "project3"),
@@ -51,7 +51,7 @@ namespace Project_manager
                     }
                 },
                 {
-                new Project("project4", "Description for Project 4", new DateTime(2023, 7, 10), new DateTime(2023, 9, 30), Status.finish),
+                new Project("project4", "Description for Project 4", new DateTime(2023, 7, 10), new DateTime(2023, 9, 30), Status.active),
                     new List<ProjectTask>
                     {
                         new ProjectTask("task 1", "Description for Task 1", new DateTime(2023, 7, 15), StatusTask.finish, TaskPriority.high, 5, "project4"),
@@ -63,11 +63,11 @@ namespace Project_manager
                     }
                 },
                 {
-                new Project("project5", "Description for Project 5", new DateTime(2023, 6, 20), new DateTime(2023, 8, 31), Status.active),
+                new Project("project5", "Description for Project 5", new DateTime(2025, 6, 20), new DateTime(2026, 8, 31), Status.active),
                     new List<ProjectTask>
                     {
                         new ProjectTask("task1", "Description for Task 1", new DateTime(2023, 6, 25), StatusTask.finish, TaskPriority.medium, 3, "project5"),
-                        new ProjectTask("task2", "Description for Task 2", new DateTime(2023, 7, 5), StatusTask.active, TaskPriority.medium, 5, "project5"),
+                        new ProjectTask("task2", "Description for Task 2", new DateTime(2024, 11, 22), StatusTask.active, TaskPriority.medium, 5, "project5"),
                         new ProjectTask("task3", "Description for Task 3", new DateTime(2023, 7, 15), StatusTask.finish, TaskPriority.low, 4, "project5"),
                         new ProjectTask("task4", "Description for Task 4", new DateTime(2023, 7, 25), StatusTask.finish, TaskPriority.medium, 6, "project5"),
                         new ProjectTask("task5", "Description for Task 5", new DateTime(2023, 8, 10), StatusTask.finish, TaskPriority.high, 7, "project5"),
@@ -183,17 +183,17 @@ namespace Project_manager
             Console.Clear();
             Console.WriteLine("Ispis svih projekata s pripadajućim zadacima");
 
-            Console.WriteLine("\nnaziv projekta - opis - pocetak - kraj - status");
-            Console.WriteLine("     naziv zadatka - opis - rok za izvrsenje - status - prioritet - ocekivano vrijeme trajanja");
+            Console.WriteLine("\nnaziv projekta");
+            Console.WriteLine("     naziv zadatka");
 
             foreach (var element in projectDictionary)
             {
                 Console.WriteLine();
-                element.Key.Print();
+                Console.WriteLine(element.Key.Name);
                 foreach (var tasks in element.Value)
                 {
                     Console.Write("    ");
-                    tasks.Print();
+                    Console.WriteLine(tasks.Name);
                 }
             }
 
@@ -222,17 +222,20 @@ namespace Project_manager
             Console.Write("Unesi datum kraja projekta (YYYY-MM-DD): ");
             var endDate = NewDate();
 
-            while (endDate < startDate)
+            DateTime minEndDate = startDate < DateTime.Now ? DateTime.Now : startDate;
+            while (endDate < minEndDate)
             {
-                Console.Write("Datum kraja projekta ne moze biti prije datuma pocetka! Unesi datum (YYYY-MM-DD): ");
+                Console.Write($"Datum kraja projekta mora biti nakon {minEndDate.ToString("yyyy-MM-dd")}! Unesi datum (YYYY-MM-DD): ");
                 endDate = NewDate();
             }
+
+            Status status = startDate < DateTime.Now ? Status.active : Status.pending;
 
             Console.Write($"jeste li sigurni da zelite dodati projekt {name} - {description} - {startDate.ToString("yyyy-MM-dd")} - {endDate.ToString("yyyy-MM-dd")} (y/n): ");
             if (YNanswer())
             {
                 Console.WriteLine("\nUspjesno dodano!");
-                Project newProject = new Project(name, description, startDate, endDate, Status.pending);
+                Project newProject = new Project(name, description, startDate, endDate, status);
                 List<ProjectTask> TaskList = new List<ProjectTask>();
 
                 projectDictionary.Add(newProject, TaskList);
@@ -339,7 +342,7 @@ namespace Project_manager
             Console.Clear();
             Console.WriteLine("Prikaz svih zadataka s rokom u sljedećih 7 dana");
 
-            Console.WriteLine("\nNaziv zadatka - opis - rok za izvrsenje - status - ocekivano vrijeme trajanja\n");
+            Console.WriteLine("\nNaziv zadatka - naziv projekta\n");
 
             foreach (var element in projectDictionary)
             {
@@ -354,7 +357,7 @@ namespace Project_manager
                     {
                         continue;
                     }
-                    tasks.Print();
+                    Console.WriteLine($"{tasks.Name} - {element.Key.Name}");
                 }
             }
 
@@ -393,13 +396,13 @@ namespace Project_manager
 
         static void PrintProjectFilter(Dictionary<Project, List<ProjectTask>> projectDictionary, string filter)
         {
-            Console.WriteLine("naziv projekta - opis - pocetak - kraj - status");
+            Console.WriteLine("naziv projekta");
 
             if (filter == "none")
             {
                 foreach (var element in projectDictionary)
                 {
-                    element.Key.Print();
+                    Console.WriteLine(element.Key.Name);
                 }
 
                 return;
@@ -411,7 +414,7 @@ namespace Project_manager
                     continue;
                 }
 
-                element.Key.Print();
+                Console.WriteLine(element.Key.Name);
             }
 
             return;
@@ -448,6 +451,10 @@ namespace Project_manager
                         ShowProjectDetails(targetProject);
                         break;
                     case 3:
+                        if (IsProjectFinished(targetProject))
+                        {
+                            break;
+                        }
                         ChangeProjectStatus(targetProject);
                         break;
                     case 4:
@@ -455,7 +462,6 @@ namespace Project_manager
                         {
                             break;
                         }
-
                         AddNewTask(projectDictionary[targetProject], targetProject);
 
                         if (IsAllTaskFinish(projectDictionary, targetProject))
@@ -498,10 +504,10 @@ namespace Project_manager
         }
         static void PrintTask(List<ProjectTask> taskList)
         {
-            Console.WriteLine("Naziv zadatka - opis - rok za izvrsenje - status - prioritet - ocekivano vrijeme trajanja");
+            Console.WriteLine("Naziv zadatka");
             foreach (var projectTask in taskList)
             {
-                projectTask.Print();
+                Console.WriteLine(projectTask.Name);
             }
         }
 
@@ -558,6 +564,14 @@ namespace Project_manager
                 Console.WriteLine("\nPonisteno!");
             }
 
+            if (newStatus == Status.active)
+            {
+                if(targetProject.StartDate > DateTime.Now)
+                {
+                    targetProject.StartDate = DateTime.Now;
+                }
+            }
+
             Console.WriteLine("\nStisni enter za nastavak...");
             Console.ReadLine();
         }
@@ -577,15 +591,17 @@ namespace Project_manager
                 description = Console.ReadLine();
             }
 
+            DateTime startRangeDate = targetProject.StartDate < DateTime.Now ? DateTime.Now : targetProject.StartDate;
+
             Console.Write("Unesi rok za izvrsenje (YYYY-MM-DD): ");
             var endDate = NewDate();
-            while (endDate < DateTime.Now)
+            while (endDate < DateTime.Now || endDate > targetProject.EndDate || endDate < targetProject.StartDate)
             {
-                Console.Write("rok za izvrsenje ne moze biti iz prošlosti! unos: (YYYY-MM-DD): ");
+                Console.Write($"rok za izvrsenje mora biti iz intervala ( {startRangeDate.ToString("yyyy-MM-dd")}, {targetProject.EndDate.ToString("yyyy-MM-dd")})! unos: (YYYY-MM-DD): ");
                 endDate = NewDate();
             }
-            Console.WriteLine("Odaberi status zadataka");
-            var status = InputTaskStatus();
+
+            var status = targetProject.StartDate<DateTime.Now ? StatusTask.active : StatusTask.delayed;
 
             Console.WriteLine("Odaberi prioritet zadataka");
             var priority = InputTaskPriority();
@@ -799,7 +815,7 @@ namespace Project_manager
         static void TaskMenu(Dictionary<Project, List<ProjectTask>> projectDictionary)
         {
             Console.Clear();
-            Console.WriteLine("Upravljanje pojedinim zadatkom");
+            Console.WriteLine("Upravljanje pojedinim zadatkom\n");
 
             Project TargetProject = FindProject(projectDictionary);
 
@@ -812,7 +828,7 @@ namespace Project_manager
             {
                 return;
             }
-
+            Console.WriteLine();
             ProjectTask TargetTask = FindTask(projectDictionary[TargetProject]);
 
             if (TargetTask == null)
@@ -845,6 +861,10 @@ namespace Project_manager
                         break;
                     case 2:
                         ChangeTaskStatus(TargetTask, TargetProject);
+                        if(IsAllTaskFinish(projectDictionary, TargetProject))
+                        {
+                            TargetProject.Status = Status.finish;
+                        }
                         break;
                     default:
                         break;
