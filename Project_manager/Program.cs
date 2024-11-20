@@ -3,6 +3,7 @@ using Project_manager_app.Classes;
 using Project_manager_app.Enum;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace Project_manager
 {
@@ -50,7 +51,7 @@ namespace Project_manager
                     }
                 },
                 {
-                new Project("project4", "Description for Project 4", new DateTime(2023, 7, 10), new DateTime(2023, 9, 30), Status.active),
+                new Project("project4", "Description for Project 4", new DateTime(2023, 7, 10), new DateTime(2023, 9, 30), Status.finish),
                     new List<ProjectTask>
                     {
                         new ProjectTask("task 1", "Description for Task 1", new DateTime(2023, 7, 15), StatusTask.finish, TaskPriority.high, 5, "project4"),
@@ -74,7 +75,7 @@ namespace Project_manager
                     }
                 }
             };
-        
+
 
             MainMenu(projectDictionary);
 
@@ -169,7 +170,7 @@ namespace Project_manager
                         ProjectMenu(projectDictionary);
                         break;
                     case 7:
-                        Console.WriteLine("aaa");
+                        TaskMenu(projectDictionary);
                         break;
                     default:
                         break;
@@ -366,7 +367,7 @@ namespace Project_manager
             Console.Clear();
             Console.WriteLine("Prikaz  projekata filtriranih po statusu: ");
             Console.WriteLine("1 - aktivan\n2 - na cekanju\n3 - zavrsen");
-            
+
             var userInput = NumInput(1, 3);
             Console.WriteLine();
 
@@ -756,7 +757,7 @@ namespace Project_manager
         {
             Console.Clear();
 
-            if(status == Status.finish)
+            if (status == Status.finish)
             {
                 Console.WriteLine($"Projekt {name} je završen, nema aktivnih zadataka.");
                 Console.WriteLine("\nStisni enter za nastavak...");
@@ -793,6 +794,93 @@ namespace Project_manager
             }
 
             return true;
+        }
+
+        static void TaskMenu(Dictionary<Project, List<ProjectTask>> projectDictionary)
+        {
+            Console.Clear();
+            Console.WriteLine("Upravljanje pojedinim zadatkom");
+
+            Project TargetProject = FindProject(projectDictionary);
+
+            if (TargetProject == null)
+            { 
+                return;
+            }
+
+            if (IsProjectFinished(TargetProject))
+            {
+                return;
+            }
+
+            ProjectTask TargetTask = FindTask(projectDictionary[TargetProject]);
+
+            if (TargetTask == null)
+            {
+                return;
+            }
+
+            var userInput = 0;
+
+            while (userInput != 3)
+            {
+                Console.Clear();
+                Console.WriteLine($"Upravljanje zadatkom {TargetTask.Name} iz  {TargetProject.Name}\n");
+                Console.WriteLine("1 - Prikaz detalja odabranog zadatka\n2 - Uređivanje statusa zadatka\n3 - Izlaz");
+
+                userInput = NumInput(1, 3);
+
+                switch (userInput)
+                {
+                    case 1:
+                        Console.Clear();
+                        Console.WriteLine($"Detalji zadatka {TargetTask.Name}\n");
+
+                        Console.WriteLine("naziv zadatka - opis - rok za izvrsenje - status - prioritet - ocekivano vrijeme trajanja");
+                        TargetTask.Print();
+
+                        Console.WriteLine("\nStisni enter za nastavak...");
+                        Console.ReadLine();
+
+                        break;
+                    case 2:
+                        ChangeTaskStatus(TargetTask, TargetProject);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+        }
+        static void ChangeTaskStatus(ProjectTask TargetTask, Project TargetProject)
+        {
+            Console.Clear();
+            Console.WriteLine($"Uredivanje statusa zadatka {TargetTask.Name}. Trenutni status zadatka je: {TargetTask.Status}");
+
+            var newStatus = InputTaskStatus();
+
+            if (newStatus == TargetTask.Status)
+            {
+                Console.WriteLine("\nStatus ostaje isti.");
+                Console.WriteLine("\nStisni enter za nastavak...");
+                Console.ReadLine();
+
+                return;
+            }
+
+            Console.Write($"jeste li sigurni da zelite promjeniti status iz {TargetTask.Status} u {newStatus} (y/n): ");
+            if (YNanswer())
+            {
+                TargetTask.Status = newStatus;
+                Console.WriteLine("\nStatus uspjesno promjenjen!");
+            }
+            else
+            {
+                Console.WriteLine("\nPonisteno!");
+            }
+
+            Console.WriteLine("\nStisni enter za nastavak...");
+            Console.ReadLine();
         }
     }
 }
