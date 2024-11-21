@@ -78,9 +78,7 @@ namespace Project_manager
                 }
             };
 
-
             MainMenu(projectDictionary);
-
         }
 
         static bool IsProjectFinished(Project TargetProject)
@@ -291,7 +289,6 @@ namespace Project_manager
             Console.Write($"Jeste li sigurni da zelite izbrisati projekt {deleteKey.Name} (y/n)? ");
             if (YNanswer())
             {
-
                 projectDictionary.Remove(deleteKey);
 
                 Console.WriteLine($"\nUspjesno izbrisan.");
@@ -691,6 +688,7 @@ namespace Project_manager
 
             return newPriority;
         }
+
         static string TaskNameEntry(List<ProjectTask> taskList)
         {
             Console.Write("Unesi ime zadatka: ");
@@ -704,6 +702,7 @@ namespace Project_manager
 
             return taskName;
         }
+
         static bool FindTaskName(List<ProjectTask> taskList, string taskName)
         {
             foreach (var project in taskList)
@@ -834,7 +833,6 @@ namespace Project_manager
                     return false;
                 }
             }
-
             return true;
         }
 
@@ -850,10 +848,6 @@ namespace Project_manager
                 return;
             }
 
-            if (IsProjectFinished(TargetProject))
-            {
-                return;
-            }
             Console.WriteLine();
             ProjectTask TargetTask = FindTask(projectDictionary[TargetProject]);
 
@@ -886,6 +880,10 @@ namespace Project_manager
 
                         break;
                     case 2:
+                        if (IsProjectFinished(TargetProject))
+                        {
+                            return;
+                        }
                         ChangeTaskStatus(TargetTask, TargetProject);
                         if(IsAllTaskFinish(projectDictionary, TargetProject))
                         {
@@ -898,6 +896,7 @@ namespace Project_manager
             }
 
         }
+
         static void ChangeTaskStatus(ProjectTask TargetTask, Project TargetProject)
         {
             Console.Clear();
